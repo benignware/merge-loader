@@ -21,7 +21,7 @@ function load(content) {
     pattern = pattern.length > 1 ? `{${pattern.join(',')}}` : pattern[0];
   }
   // Resolve merge implementation
-  const mergeImplRequest = loaderUtils.stringifyRequest(this, options.merge || resolvePath(__dirname, 'node_modules', 'lodash.merge'));
+  const mergeImplRequest = loaderUtils.stringifyRequest(this, options.merge || 'lodash.merge');
   // Find files
   glob(pattern, globOpts, (err, files) => {
     if (err) {
