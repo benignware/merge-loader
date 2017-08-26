@@ -43,11 +43,6 @@ module.exports = {
 };
 ```
 
-The example assumes that `process.env.NODE_ENV` is set to `production`. This can be achieved by with [cross-env](https://www.npmjs.com/package/cross-env) when issued as shell command:
-```cli
-cross-env NODE_ENV=production webpack
-```
-
 src/config.js
 
 ```js
@@ -73,6 +68,11 @@ src/index.js
 const { helloWorld, environment } = require('./config.js');
 console.log(helloWorld); // Hello World
 console.log(environment()); // Production
+```
+
+> The example assumes that `process.env.NODE_ENV` is set to `production`. This can be achieved with [cross-env](https://www.npmjs.com/package/cross-env) when issued as a shell command:
+```cli
+cross-env NODE_ENV=production webpack
 ```
 
 ## Options
