@@ -81,4 +81,4 @@ cross-env NODE_ENV=production webpack
 | -------- | -------------------------------- | -------------------------------- |
 | pattern  | <code>string&#x007C;array</code> | Provide one or more glob patterns to match files that should be merged in. See [glob](https://www.npmjs.com/package/glob) for more info.
 | glob  | <code>object</code> | Options passed to [glob](https://www.npmjs.com/package/glob).
-| merge  | <code>string</code> | Specify a module used for merging. Defaults to merge-loader's own implementation at `lib/merge`.
+| merge  | <code>string</code> | Specify a module used for merging. Defaults to merge-loader's own implementation at [./lib/merge](./lib/merge.js)`.
