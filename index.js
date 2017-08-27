@@ -22,7 +22,7 @@ function load(content) {
     pattern = pattern.length > 1 ? `{${pattern.join(',')}}` : pattern[0];
   }
   // Resolve merge implementation
-  const mergeImplRequest = loaderUtils.stringifyRequest(this, merge || 'lodash.merge');
+  const mergeImplRequest = loaderUtils.stringifyRequest(this, merge || resolvePath(__dirname, 'lib/merge'));
   // Find files
   glob(pattern, globOpts, (err, files) => {
     if (err) {

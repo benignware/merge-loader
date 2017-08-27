@@ -1,45 +1,58 @@
 const assert = require('assert');
 const { join: joinPath } = require('path');
-const { readFileSync, writeFileSync } = require('fs');
-const mockery = require('mockery');
+const { readFileSync } = require('fs');
 const requireFromString = require('require-from-string');
 const loader = require('..');
 
-mockery.registerSubstitute('./env/production/config.js', joinPath(__dirname, './fixtures/env/production/config.js'));
-mockery.registerSubstitute('../../node_modules/lodash.merge', './node_modules/lodash.merge');
-mockery.enable({
-  warnOnReplace: false,
-  warnOnUnregistered: false
+const createContext = (options = {}, callback = (err = null, content = null) => {}) => ({
+  query: options,
+  cacheable: () => {},
+  addDependency: () => {},
+  async: () => callback
 });
 
 describe('config-loader', () => {
-  it('should merge as expected', (done) => {
-    const options = {
+  it('should merge modules with default options', (done) => {
+    loader.call(createContext({
+      pattern: `fixtures/env/${process.env.NODE_ENV}/config.*`
+    }, (err, content) => {
+      if (err) {
+        throw err;
+      }
+      const config = requireFromString(content);
+      assert.equal(
+        config.environment(),
+        'Production'
+      );
+      assert.equal(
+        config.helloWorld,
+        'Hello World'
+      );
+      done();
+    }), readFileSync(joinPath(__dirname, 'fixtures', 'config.js'), 'utf-8'));
+  });
+
+  it('should merge modules with custom options', (done) => {
+    loader.call(createContext({
       pattern: `env/${process.env.NODE_ENV}/config.*`,
       glob: {
         cwd: joinPath(__dirname, 'fixtures')
+      },
+      merge: 'lodash.merge'
+    }, (err, content) => {
+      if (err) {
+        throw err;
       }
-    };
-    loader.call({
-      query: options,
-      context: joinPath(__dirname, './fixtures'),
-      cacheable: () => {},
-      addDependency: () => {},
-      async: () => (err, content) => {
-        if (err) {
-          throw err;
-        }
-        const config = requireFromString(content);
-        assert.equal(
-          config.environment(),
-          'Production'
-        );
-        assert.equal(
-          config.helloWorld,
-          'Hello World'
-        );
-        done();
-      }
-    }, readFileSync(joinPath(__dirname, 'fixtures', 'config.js'), 'utf-8'));
+      const config = requireFromString(content);
+      assert.equal(
+        config.environment(),
+        'Production'
+      );
+      assert.equal(
+        config.helloWorld,
+        'Hello World'
+      );
+      done();
+    }), readFileSync(joinPath(__dirname, 'fixtures', 'config.js'), 'utf-8'));
   });
 });
