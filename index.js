@@ -1,5 +1,4 @@
 const { resolve: resolvePath } = require('path');
-const merge = require('lodash.merge');
 const glob = require('glob');
 const loaderUtils = require('loader-utils');
 
@@ -13,15 +12,17 @@ function load(content) {
   // Setup options with defaults
   const options = loaderUtils.getOptions(this);
   // Destructuring to scope
-  let { pattern, glob: { cwd } = {}, glob: globOpts = {} } = options;
-  // Set glob directory
-  globOpts.cwd = this.context;
+  let { pattern, glob: globOpts = {}, merge } = options;
+  // Set glob directory if not provided
+  if (!globOpts.cwd) {
+    globOpts.cwd = process.cwd();
+  }
   // Allow multiple patterns provided as array
   if (pattern instanceof Array) {
     pattern = pattern.length > 1 ? `{${pattern.join(',')}}` : pattern[0];
   }
   // Resolve merge implementation
-  const mergeImplRequest = loaderUtils.stringifyRequest(this, options.merge || 'lodash.merge');
+  const mergeImplRequest = loaderUtils.stringifyRequest(this, merge || 'lodash.merge');
   // Find files
   glob(pattern, globOpts, (err, files) => {
     if (err) {
@@ -34,7 +35,7 @@ function load(content) {
       return callback(null, content);
     }
     // Get absolute paths
-    const paths = files.map(file => resolvePath(cwd, file));
+    const paths = files.map(file => resolvePath(globOpts.cwd, file));
     // Add dependencies for watch mode
     paths.forEach(src => this.addDependency(src));
     // Get requests
