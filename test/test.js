@@ -15,7 +15,10 @@ mockery.enable({
 describe('config-loader', () => {
   it('should merge as expected', (done) => {
     const options = {
-      pattern: `env/${process.env.NODE_ENV}/config.*`
+      pattern: `env/${process.env.NODE_ENV}/config.*`,
+      glob: {
+        cwd: joinPath(__dirname, 'fixtures')
+      }
     };
     loader.call({
       query: options,
