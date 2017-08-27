@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "cd test && cross-env NODE_ENV=production mocha ./test.js",
-    "example": "cd example && cross-env NODE_ENV=production THEME=test webpack --display-modules --resolve-loader-alias merge-loader=.. && node dist/index.js",
+    "example": "cd example && cross-env NODE_ENV=production webpack --display-modules --resolve-loader-alias merge-loader=.. && node dist/index.js",
     "lint": "eslint index.js"
   },
   "author": "Rafael Nowrotek",
