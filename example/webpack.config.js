@@ -15,7 +15,7 @@ module.exports = {
             loader: 'merge-loader',
             options: {
               pattern: [
-                `env/${process.env.NODE_ENV}/config.*`
+                `src/env/${process.env.NODE_ENV}/config.*`
               ]
             }
           }
